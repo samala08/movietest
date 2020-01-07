@@ -1,0 +1,30 @@
+version: 0.2
+
+
+phases:
+  install:
+      runtime-versions:
+      java: openjdk8
+      runtime: version
+    commands:
+      - echo install
+  
+  pre_build:
+  
+    commands:
+        -  echo Pre-build
+    
+  build:
+      commands:
+      - mvn package
+      - echo build
+   
+  post_build:
+       commands:
+      - echo post-build
+      
+artifacts:
+  files:
+    - target/moviereview-0.0.1-SNAPSHOT.jar
+  
+  
