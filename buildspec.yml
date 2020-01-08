@@ -4,8 +4,8 @@ version: 0.2
 phases:
   install:
       runtime-versions:
-      java: openjdk8
-      runtime: version
+      java: corretto8
+      
     commands:
       - echo install
   
