@@ -16,6 +16,7 @@ phases:
     
   build:
       commands:
+      - java -version
       - mvn package
       - echo build
    
