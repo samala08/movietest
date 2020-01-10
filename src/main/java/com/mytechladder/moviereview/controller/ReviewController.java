@@ -1,5 +1,6 @@
 package com.mytechladder.moviereview.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,24 @@ public class ReviewController {
 
 			return "Saved review";
 	}
+	
+	// Usecase/(taskid) -3
+		@GetMapping("/comment")
+		public List<Reviews> getMoviesByRatAndCat(@RequestParam int rating, @RequestParam String category){
+			
+			// Get movies by category & prepare movie id list
+			List<Movie> moviesByGivenCategory = movierepo.findByCategory(category);
+			
+			List<Integer> movieIdList = new ArrayList<Integer>();
+			for(Movie mv : moviesByGivenCategory) {
+				movieIdList.add(mv.getId());
+			}
+			
+			// Get reviews by rating and prepared movie id list
+			List<Reviews> result = reviewrepo.findByRatingAndMovie_idIn(rating, movieIdList);	
+
+			return result;
+		};
+		
 
 }
