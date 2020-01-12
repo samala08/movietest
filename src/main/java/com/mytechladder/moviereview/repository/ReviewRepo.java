@@ -8,4 +8,5 @@ import com.mytechladder.moviereview.model.Reviews;
 
 public interface ReviewRepo extends CrudRepository<Reviews,Integer>{
 	
+	List<Reviews> findByMovie_id(int movie_id);
 }
