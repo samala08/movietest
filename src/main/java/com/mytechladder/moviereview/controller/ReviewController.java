@@ -30,12 +30,12 @@ public class ReviewController {
 	private UserRepo userrepo;
 
 	// Usecase(taskId)-1
-		@PostMapping(path = "/comment")
-		public @ResponseBody String addComments(@RequestParam String username, @RequestParam String title,
+	@PostMapping(path = "/comment")
+	public @ResponseBody String addComments(@RequestParam String username, @RequestParam String title,
 				@RequestParam String comment, @RequestParam int starrating) {
 
-				return "Saved review";
-		}
+			return "Saved review";
+	}
 	
 	//Use case - task id 5: Request to read review of all movies by given category 
 	@GetMapping(path = "/comment")
@@ -49,22 +49,22 @@ public class ReviewController {
 	}
 	
 	//Use case - task id 3: Request to read review of all movies by given rating and  category 
-		@GetMapping("/comment")
-		public List<Reviews> getMoviesByRatAndCat(@RequestParam int rating, @RequestParam String category){
+	@GetMapping("/comment")
+	public List<Reviews> getMoviesByRatAndCat(@RequestParam int rating, @RequestParam String category){
 			
-			// Get movies by category & prepare movie id list
-			List<Movie> moviesByGivenCategory = movierepo.findByCategory(category);
-			
-			List<Integer> movieIdList = new ArrayList<Integer>();
-			for(Movie mv : moviesByGivenCategory) {
-				movieIdList.add(mv.getId());
-			}
-			
-			// Get reviews by rating and prepared movie id list
-			List<Reviews> result = reviewrepo.findByRatingAndMovie_idIn(rating, movieIdList);	
+		// Get movies by category & prepare movie id list
+		List<Movie> moviesByGivenCategory = movierepo.findByCategory(category);
+		
+		List<Integer> movieIdList = new ArrayList<Integer>();
+		for(Movie mv : moviesByGivenCategory) {
+			movieIdList.add(mv.getId());
+		}
+		
+		// Get reviews by rating and prepared movie id list
+		List<Reviews> result = reviewrepo.findByRatingAndMovie_idIn(rating, movieIdList);	
 
-			return result;
-		};
+		return result;
+	};
 		
 
 }
