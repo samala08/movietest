@@ -49,9 +49,8 @@ public class ReviewController {
 	}
 	
 	//Use case - task id 3: Request to read review of all movies by given rating and  category 
-	@GetMapping("/comment")
-	public List<Reviews> getMoviesByRatAndCat(@RequestParam int rating, @RequestParam String category){
-			
+	@GetMapping(value = "/comment", params = { "rating", "category" })
+	public List<Reviews> getMoviesByRatAndCat(@RequestParam( value ="rating") int rating, @RequestParam(value ="category") String category){
 		// Get movies by category & prepare movie id list
 		List<Movie> moviesByGivenCategory = movierepo.findByCategory(category);
 		
