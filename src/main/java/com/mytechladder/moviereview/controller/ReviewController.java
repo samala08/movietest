@@ -48,7 +48,7 @@ public class ReviewController {
 		return resultList;
 	}
 	
-	// Usecase/(taskid) -3
+	//Use case - task id 3: Request to read review of all movies by given rating and  category 
 		@GetMapping("/comment")
 		public List<Reviews> getMoviesByRatAndCat(@RequestParam int rating, @RequestParam String category){
 			
