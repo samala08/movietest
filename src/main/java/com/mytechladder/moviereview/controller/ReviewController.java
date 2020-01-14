@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.mytechladder.moviereview.model.Movie;
 import com.mytechladder.moviereview.model.Reviews;
@@ -48,21 +50,25 @@ public class ReviewController {
 		return resultList;
 	}
 	
+	
 	//Use case - task id 3: Request to read review of all movies by given rating and  category 
 	@GetMapping(value = "/comment", params = { "rating", "category" })
-	public List<Reviews> getMoviesByRatAndCat(@RequestParam( value ="rating") int rating, @RequestParam(value ="category") String category){
-		// Get movies by category & prepare movie id list
+	public List<Reviews> getMoviesByRatAndCat(@RequestParam( value ="rating") int rating, @RequestParam(value ="category") String category)
+	{	
+		if(rating < 1 || rating > 5) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rating");
+		}
+	
 		List<Movie> moviesByGivenCategory = movierepo.findByCategory(category);
 		
 		List<Integer> movieIdList = new ArrayList<Integer>();
 		for(Movie mv : moviesByGivenCategory) {
-			movieIdList.add(mv.getId());
+				movieIdList.add(mv.getId());
 		}
-		
-		// Get reviews by rating and prepared movie id list
-		List<Reviews> result = reviewrepo.findByRatingAndMovie_idIn(rating, movieIdList);	
+	
+		List<Reviews> resultList = reviewrepo.findByRatingAndMovie_idIn(rating, movieIdList);	
 
-		return result;
+		return resultList;
 	};
 		
 
