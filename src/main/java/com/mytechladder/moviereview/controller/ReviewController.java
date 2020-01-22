@@ -38,7 +38,30 @@ public class ReviewController {
 
 			return "Saved review";
 	}
-	
+
+	//Usecase to add reviews for a given movie by title
+	@PostMapping(path="/addReview")
+	public @ResponseBody Reviews addReview(@RequestParam String username, @RequestParam String title,
+			@RequestParam String comment, @RequestParam int starrating)
+	{			
+		Movie movie= movierepo.findByTitle(title);
+		int movie_id = movie.getId();
+					
+		User user=userrepo.findByUsername(username);
+		int user_id = user.getId();
+			
+		Reviews review= new Reviews();
+		review.setMovie_id(movie_id);
+		review.setUser_id(user_id);
+		review.setComment(comment);
+		review.setRating(starrating);
+		
+		reviewrepo.save(review);
+		
+		return review;
+	}
+
+		
 	//Use case - task id 5: Request to read review of all movies by given category 
 	@GetMapping(path = "/comment")
 	public List<Reviews> getReviewByCategory(@RequestParam String category) {
