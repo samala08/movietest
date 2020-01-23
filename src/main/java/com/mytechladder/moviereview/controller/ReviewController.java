@@ -45,9 +45,19 @@ public class ReviewController {
 			@RequestParam String comment, @RequestParam int starrating)
 	{			
 		Movie movie= movierepo.findByTitle(title);
+		if(movie==null)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Movie Title");
+		}
 		int movie_id = movie.getId();
 					
 		User user=userrepo.findByUsername(username);
+		
+		if(user==null)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid User ID");
+		}
+			
 		int user_id = user.getId();
 			
 		Reviews review= new Reviews();
