@@ -92,6 +92,7 @@ public class ReviewController {
 		List<Reviews> resultList = reviewrepo.findByRatingAndMovie_idIn(rating, movieIdList);	
 
 		return resultList;
+		
 	};
 	
 	//Use case - task id 4: Request to read review of all movies by rating and movie_id

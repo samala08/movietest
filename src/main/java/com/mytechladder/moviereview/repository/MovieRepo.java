@@ -9,5 +9,5 @@ public interface MovieRepo extends CrudRepository<Movie,Integer> {
 	
 	Movie findByTitle(String title);
 	List<Movie> findByCategory(String category);
-	//List<Movie> findByRating(int rating);
+	
 }
