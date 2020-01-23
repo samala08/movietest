@@ -93,6 +93,23 @@ public class ReviewController {
 
 		return resultList;
 	};
+	
+	//Use case - task id 4: Request to read review of all movies by rating and movie_id
+	@GetMapping(path = "/comment", params = { "rating" })
+	public List<Reviews> findByRating(@RequestParam( value = "rating") int rating ) {
+		
+		List<Reviews> reviewsByRating = reviewrepo.findByRating(rating);
+		
+		List<Integer> movieIdList = new ArrayList<Integer>();
+		for (Reviews rv: reviewsByRating) {
+			movieIdList.add(rv.getMovie_id());
+			
+		}
+		
+		List<Reviews> resultList = reviewrepo.findByRatingAndMovie_idIn(rating, movieIdList);
+		
+		return resultList;
+	}
 		
 
 }
