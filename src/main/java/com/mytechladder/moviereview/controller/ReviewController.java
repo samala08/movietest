@@ -98,7 +98,6 @@ public class ReviewController {
 		}
 	
 		// Invalid Category Check
-		//List<String> categoryList = Arrays.asList("G", "PG", "PG13", "PG-13", "NC17", "NC-17", "R" ,"NR", "UR");	
 		if (!CATEGORY_LIST.contains(category)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Category");
 		}
