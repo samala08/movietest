@@ -1,6 +1,7 @@
 package com.mytechladder.moviereview.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class ReviewController {
 	private MovieRepo movierepo;
 	@Autowired
 	private UserRepo userrepo;
+	
+	public final static List<String> CATEGORY_LIST = Arrays.asList("G", "PG", "PG13", "PG-13", "NC17", "NC-17", "R" ,"NR", "UR");	
+
 
 	// Usecase(taskId)-1
 	@PostMapping(path = "/comment")
@@ -88,13 +92,18 @@ public class ReviewController {
 	@GetMapping(value = "/comment", params = { "rating", "category" })
 	public List<Reviews> getMoviesByRatAndCat(@RequestParam( value ="rating") int rating, @RequestParam(value ="category") String category)
 	{	
+		// Invalid Rating Check
 		if(rating < 1 || rating > 5) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rating");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Rating");
 		}
 	
-		List<Movie> moviesByGivenCategory = movierepo.findByCategory(category);
+		// Invalid Category Check
+		if (!CATEGORY_LIST.contains(category)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Category");
+		}
 		
 		List<Integer> movieIdList = new ArrayList<Integer>();
+		List<Movie> moviesByGivenCategory = movierepo.findByCategory(category);
 		for(Movie mv : moviesByGivenCategory) {
 				movieIdList.add(mv.getId());
 		}
