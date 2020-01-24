@@ -102,9 +102,8 @@ public class ReviewController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Category");
 		}
 		
-		List<Movie> moviesByGivenCategory = movierepo.findByCategory(category);
-		
 		List<Integer> movieIdList = new ArrayList<Integer>();
+		List<Movie> moviesByGivenCategory = movierepo.findByCategory(category);
 		for(Movie mv : moviesByGivenCategory) {
 				movieIdList.add(mv.getId());
 		}
