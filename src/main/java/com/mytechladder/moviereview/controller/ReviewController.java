@@ -94,7 +94,7 @@ public class ReviewController {
 	{	
 		// Invalid Rating Check
 		if(rating < 1 || rating > 5) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rating");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Rating");
 		}
 	
 		// Invalid Category Check
