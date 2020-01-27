@@ -1,6 +1,7 @@
 package com.mytechladder.moviereview.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class ReviewController {
 	private MovieRepo movierepo;
 	@Autowired
 	private UserRepo userrepo;
+	
+	public final static List<String> CATEGORY_LIST = Arrays.asList("G", "PG", "PG13", "PG-13", "NC17", "NC-17", "R" ,"NR", "UR");	
+
 
 	// Usecase(taskId)-1
 	@PostMapping(path = "/comment")
@@ -45,19 +49,19 @@ public class ReviewController {
 			@RequestParam String comment, @RequestParam int starrating)
 	{			
 		Movie movie= movierepo.findByTitle(title);
-		if(movie==null)
+    	if(movie==null)
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Movie Title");
 		}
 		int movie_id = movie.getId();
 					
 		User user=userrepo.findByUsername(username);
-		
-		if(user==null)
+    
+    if(user==null)
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid User ID");
 		}
-			
+    
 		int user_id = user.getId();
 			
 		Reviews review= new Reviews();
@@ -88,13 +92,18 @@ public class ReviewController {
 	@GetMapping(value = "/comment", params = { "rating", "category" })
 	public List<Reviews> getMoviesByRatAndCat(@RequestParam( value ="rating") int rating, @RequestParam(value ="category") String category)
 	{	
+		// Invalid Rating Check
 		if(rating < 1 || rating > 5) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rating");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Rating");
 		}
 	
-		List<Movie> moviesByGivenCategory = movierepo.findByCategory(category);
+		// Invalid Category Check
+		if (!CATEGORY_LIST.contains(category)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Category");
+		}
 		
 		List<Integer> movieIdList = new ArrayList<Integer>();
+		List<Movie> moviesByGivenCategory = movierepo.findByCategory(category);
 		for(Movie mv : moviesByGivenCategory) {
 				movieIdList.add(mv.getId());
 		}
@@ -102,7 +111,25 @@ public class ReviewController {
 		List<Reviews> resultList = reviewrepo.findByRatingAndMovie_idIn(rating, movieIdList);	
 
 		return resultList;
+		
 	};
+	
+	//Use case - task id 4: Request to read review of all movies by rating and movie_id
+	@GetMapping(path = "/comment", params = { "rating" })
+	public List<Reviews> findByRating(@RequestParam( value = "rating") int rating ) {
+		
+		List<Reviews> reviewsByRating = reviewrepo.findByRating(rating);
+		
+		List<Integer> movieIdList = new ArrayList<Integer>();
+		for (Reviews rv: reviewsByRating) {
+			movieIdList.add(rv.getMovie_id());
+			
+		}
+		
+		List<Reviews> resultList = reviewrepo.findByRatingAndMovie_idIn(rating, movieIdList);
+		
+		return resultList;
+	}
 		
 
 }
