@@ -133,7 +133,16 @@ public class ReviewController {
 	@GetMapping(path = "/comment", params = { "rating" })
 	public List<Reviews> findByRating(@RequestParam( value = "rating") int rating ) {
 		
+		if(rating < 1 || rating > 5) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rating");
+		}
+		
 		List<Reviews> reviewsByRating = reviewrepo.findByRating(rating);
+		
+		if(reviewsByRating == null)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Rating");
+		}
 		
 		List<Integer> movieIdList = new ArrayList<Integer>();
 		for (Reviews rv: reviewsByRating) {
