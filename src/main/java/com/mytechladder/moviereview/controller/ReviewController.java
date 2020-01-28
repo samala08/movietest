@@ -2,6 +2,7 @@ package com.mytechladder.moviereview.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class ReviewController {
 	public final static List<String> CATEGORY_LIST = Arrays.asList("G", "PG", "PG13", "PG-13", "NC17", "NC-17", "R" ,"NR", "UR");	
 
 
+	private static final List<String> categoryList = Collections.unmodifiableList(Arrays.asList("G", "PG", "PG-13", "R", "NC-17") );
 	// Usecase(taskId)-1
 	@PostMapping(path = "/comment")
 	public @ResponseBody String addComments(@RequestParam String username, @RequestParam String title,
@@ -78,13 +80,26 @@ public class ReviewController {
 		
 	//Use case - task id 5: Request to read review of all movies by given category 
 	@GetMapping(path = "/comment")
-	public List<Reviews> getReviewByCategory(@RequestParam String category) {
-		List<Movie> moviesByGivenCategory = movierepo.findByCategory(category);
-		List<Reviews> resultList = new ArrayList<Reviews>();
-		for (Movie m: moviesByGivenCategory) {
-			resultList.addAll(reviewrepo.findByMovie_id(m.getId()));
+	public List<Reviews> getReviewByCategory(@RequestParam String category) 
+	{
+    	if(category==null)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Category");
 		}
-		return resultList;
+    	if (categoryList.contains(category))
+    	{
+    		List<Movie> moviesByGivenCategory = movierepo.findByCategory(category);
+    		List<Reviews> resultList = new ArrayList<Reviews>();
+    		for (Movie m: moviesByGivenCategory) 
+    		{
+    			resultList.addAll(reviewrepo.findByMovie_id(m.getId()));
+    		}
+    		return resultList;
+    	}
+    	else
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Movie Title does not exist in this Category");
+		}    		
 	}
 	
 	
@@ -131,5 +146,20 @@ public class ReviewController {
 		return resultList;
 	}
 		
+	//Use case - task id 2:Request to read review of a given movie title
+	@GetMapping(path = "/getReviewByMovieTitle")
+	public @ResponseBody List<Reviews> getReviewByTitle(String title) {
+		if(title == null)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Movie Title");
+		}
+		Movie m = movierepo.findByTitle(title);
+		if(m == null)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Movie does not exist");
+		}
+		else
+			return reviewrepo.findByMovie_id(m.getId());
+	}
 
 }
