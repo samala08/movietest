@@ -35,8 +35,6 @@ public class ReviewController {
 	
 	public final static List<String> CATEGORY_LIST = Arrays.asList("G", "PG", "PG13", "PG-13", "NC17", "NC-17", "R" ,"NR", "UR");	
 
-
-	private static final List<String> categoryList = Collections.unmodifiableList(Arrays.asList("G", "PG", "PG-13", "R", "NC-17") );
 	// Usecase(taskId)-1
 	@PostMapping(path = "/comment")
 	public @ResponseBody String addComments(@RequestParam String username, @RequestParam String title,
@@ -82,24 +80,31 @@ public class ReviewController {
 	@GetMapping(path = "/comment")
 	public List<Reviews> getReviewByCategory(@RequestParam String category) 
 	{
+		// NULL input check
     	if(category==null)
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Category");
 		}
-    	if (categoryList.contains(category))
+    	
+    	// Invalid Category Check
+    	if (!CATEGORY_LIST.contains(category))
     	{
-    		List<Movie> moviesByGivenCategory = movierepo.findByCategory(category);
-    		List<Reviews> resultList = new ArrayList<Reviews>();
-    		for (Movie m: moviesByGivenCategory) 
-    		{
-    			resultList.addAll(reviewrepo.findByMovie_id(m.getId()));
-    		}
-    		return resultList;
+    		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Category");
     	}
-    	else
-		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Movie Title does not exist in this Category");
-		}    		
+    	
+    	//Movie with this category does not exist in the database
+    	if (movierepo.findByCategory(category).isEmpty())
+    	{
+    		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Movie for this Category does not exist");
+    	}
+    	
+    	List<Movie> moviesByGivenCategory = movierepo.findByCategory(category);
+    	List<Reviews> resultList = new ArrayList<Reviews>();
+    	for (Movie m: moviesByGivenCategory) 
+    	{
+    		resultList.addAll(reviewrepo.findByMovie_id(m.getId()));
+    	}
+    	return resultList;    	   		
 	}
 	
 	
