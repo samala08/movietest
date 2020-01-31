@@ -35,14 +35,6 @@ public class ReviewController {
 	
 	public final static List<String> CATEGORY_LIST = Arrays.asList("G", "PG", "PG13", "PG-13", "NC17", "NC-17", "R" ,"NR", "UR");	
 
-	// Usecase(taskId)-1
-	@PostMapping(path = "/comment")
-	public @ResponseBody String addComments(@RequestParam String username, @RequestParam String title,
-				@RequestParam String comment, @RequestParam int starrating) {
-
-			return "Saved review";
-	}
-
 	//Usecase to add reviews for a given movie by title
 	@PostMapping(path="/addReview")
 	public @ResponseBody Reviews addReview(@RequestParam String username, @RequestParam String title,
