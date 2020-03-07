@@ -67,6 +67,14 @@ public class ReviewController {
 		return review;
 	}
 
+	@GetMapping(path="/movies")
+	public List<Movie> getMoviesList(){
+		
+		List movieList = movierepo.findAll();
+		
+		return movieList;
+		
+	}
 		
 	//Use case - task id 5: Request to read review of all movies by given category 
 	@GetMapping(path = "/comment")
