@@ -73,9 +73,19 @@ public class ReviewController {
 	@GetMapping(path="/movies")
 	public List<Movie> getMoviesList(){
 		
-		List movieList = movierepo.findAll();
+		List<Movie> movieList = movierepo.findAll();
 		
 		return movieList;
+		
+	}
+	
+	
+	@GetMapping(path="/userNames")
+	public List<User> getUsersList(){
+		
+		List<User> usersList = userrepo.findAll();
+		
+		return usersList;
 		
 	}
 		
